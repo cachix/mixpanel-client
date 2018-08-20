@@ -1,0 +1,8 @@
+resolver: lts-12.0
+packages:
+- .
+nix:
+    packages: [zlib]
+    # for building haddock
+    pure: false
+extra-deps: []
