@@ -8,12 +8,10 @@ module MixPanel.Api
   ) where
 
 
-import Data.Aeson (ToJSON)
 import Data.Text (Text)
 
 import Data.Proxy (Proxy(..))
 import Servant.API hiding (URI)
-import Text.URI (URI)
 
 import MixPanel.Types.Core (IsSuccess)
 import MixPanel.Types.TrackData (TrackData)
@@ -40,6 +38,7 @@ type API = Track :<|> Engage
 
 api :: Proxy API
 api = Proxy
+
 {- TODO:
 - engage special properties
 - batch requests

@@ -33,7 +33,6 @@ default-extensions:
 - LambdaCase
 - DeriveGeneric
 - DeriveFunctor
-- GeneralizedNewtypeDeriving
 - DeriveAnyClass
 - RecordWildCards
 
@@ -63,7 +62,6 @@ tests:
       build-tool-depends: hspec-discover:hspec-discover
 
   readme:
-    type: exitcode-stdio-1.0
     main: README.lhs
     dependencies:
     - base

@@ -6,7 +6,7 @@ module MixPanel.Types.TrackData
   , Token
   ) where
 
-import Data.Aeson      (ToJSON, FromJSON, parseJSON, toJSON, withText, encode, object, (.=))
+import Data.Aeson      (ToJSON, parseJSON, toJSON, withText, encode, object, (.=))
 import Data.Text       (Text)
 import qualified Data.ByteString.Base64.Lazy as B64
 import Data.Time.Clock.POSIX (POSIXTime)

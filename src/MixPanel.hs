@@ -9,24 +9,15 @@ module MixPanel
   , HTTP.newManager
   ) where
 
--- TODO: alias with distinct_id: https://github.com/mixpanel/mixpanel-python/blob/master/mixpanel/__init__.py#L150
--- TODO: mixpanel datetime
--- TODO: verbose by default
-
 import           Control.Monad.Trans.Reader     ( ReaderT(..), runReaderT )
-import           Control.Monad.IO.Class         ( MonadIO
-                                                , liftIO
-                                                )
 import Data.Aeson      (ToJSON)
 import           Data.Text                      ( Text )
 import qualified Network.HTTP.Client           as HTTP
 import           Network.HTTP.Client.TLS        ( tlsManagerSettings )
 import           Servant.API             hiding ( URI )
 import           Servant.Client
-import           Text.URI                       ( URI )
 
 import           MixPanel.Api                   ( api
-                                                , API
                                                 )
 import           MixPanel.Types.Core            ( IsSuccess
                                                 , Token(..)
