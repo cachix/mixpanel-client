@@ -1,6 +1,8 @@
-# MixPanel haskell client
+# MixPanel client for Haskell
 
-## Minimal example
+Implements part of [MixPanel HTTP API](https://mixpanel.com/help/reference/http).
+
+## Getting started
 
 ```haskell
 import MixPanel
@@ -8,7 +10,7 @@ import MixPanel
 main :: IO ()
 main = do
   manager <- newManager tlsManagerSettings
-  let env = mkEnv (Token "foobar") manager
+  let env = mkEnv (AuthToken "foobar") manager
   successOrErr <- runMixPanel env $ track "Testing" (Nothing :: Maybe ())
   print successOrErr
 ```

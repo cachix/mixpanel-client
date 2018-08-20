@@ -1,7 +1,7 @@
 module MixPanel
   ( runMixPanel
   , MixPanel
-  , Token(..)
+  , AuthToken(..)
   , mkEnv
   , track
   -- manager reexports
@@ -20,7 +20,7 @@ import           Servant.Client
 import           MixPanel.Api                   ( api
                                                 )
 import           MixPanel.Types.Core            ( IsSuccess
-                                                , Token(..)
+                                                , AuthToken(..)
                                                 )
 import           MixPanel.Types.TrackData       ( TrackData(..), mkProperties )
 import           MixPanel.Types.EngageData      ( EngageData )
@@ -30,18 +30,17 @@ host :: BaseUrl
 host = BaseUrl Https "api.mixpanel.com" 443 ""
 
 data Env = Env
-  { token :: Token
+  { token :: AuthToken
   , httpManager :: HTTP.Manager
   , clientEnv :: ClientEnv
   }
 
-mkEnv :: Token -> HTTP.Manager -> Env
+mkEnv :: AuthToken -> HTTP.Manager -> Env
 mkEnv token httpManager = Env {..}
   where
     clientEnv = mkClientEnv httpManager host
 
 type MixPanel = ReaderT Env ClientM
-
 
 trackC :: TrackData -> Maybe IsSuccess -> Maybe Text -> Maybe IsSuccess -> Maybe Text -> Maybe IsSuccess -> ClientM IsSuccess
 engageC ::  EngageData -> Maybe Text -> Maybe Text -> Maybe IsSuccess -> ClientM IsSuccess

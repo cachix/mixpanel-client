@@ -17,7 +17,7 @@ import           Data.String.Conv               ( toS )
 import           GHC.Generics                   ( Generic )
 import           Servant.API
 
-import           MixPanel.Types.Core            ( Token )
+import           MixPanel.Types.Core            ( AuthToken )
 
 
 data Operation where
@@ -34,7 +34,7 @@ data Operation where
 type DistinctId = ByteString
 
 data EngageData = EngageData
-  { token :: Token
+  { token :: AuthToken
   , distinctId :: DistinctId
   , ip :: Maybe ByteString
   , time :: Maybe ByteString
@@ -51,7 +51,7 @@ instance ToJSON EngageData where
 instance ToHttpApiData EngageData where
   toUrlPiece = toS . B64.encode . encode
 
-mkEngageData :: Token -> DistinctId -> Operation -> EngageData
+mkEngageData :: AuthToken -> DistinctId -> Operation -> EngageData
 mkEngageData token di op = EngageData
   { token = token
   , distinctId = di

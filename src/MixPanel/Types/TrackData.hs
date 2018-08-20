@@ -3,7 +3,6 @@ module MixPanel.Types.TrackData
   ( TrackData(..)
   , Properties
   , mkProperties
-  , Token
   ) where
 
 import Data.Aeson      (ToJSON, parseJSON, toJSON, withText, encode, object, (.=))
@@ -14,7 +13,7 @@ import GHC.Generics (Generic)
 import Servant.API
 import Data.String.Conv (toS)
 
-import MixPanel.Types.Core (Token)
+import MixPanel.Types.Core (AuthToken)
 
 
 data TrackData = TrackData
@@ -27,7 +26,7 @@ instance ToHttpApiData TrackData where
   toUrlPiece = toS . B64.encode . encode
 
 data Properties = forall a. ToJSON a => Properties
-  { token :: Token
+  { token :: AuthToken
   , distinctId :: Maybe Text
   , time :: Maybe POSIXTime
   , ip :: Maybe Text
@@ -40,7 +39,7 @@ instance ToJSON Properties where
     , "distinct_id" .= distinctId
     ] -- TODO: extraproperties
 
-mkProperties :: ToJSON a => Token -> a -> Properties
+mkProperties :: ToJSON a => AuthToken -> a -> Properties
 mkProperties token extra = Properties
   { token = token
   , distinctId = Nothing
