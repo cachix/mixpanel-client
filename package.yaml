@@ -57,7 +57,17 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - mixpanel
+    - mixpanel-client
     - hspec
     verbatim:
       build-tool-depends: hspec-discover:hspec-discover
+
+  readme:
+    type: exitcode-stdio-1.0
+    main: README.lhs
+    dependencies:
+    - base
+    - mixpanel-client
+    - markdown-unlit
+    ghc-options:
+    - -pgmL markdown-unlit

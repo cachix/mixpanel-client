@@ -1,6 +1,6 @@
 module MixPanel.Types.Core (Token(..), IsSuccess(..)) where
 
-import Data.Aeson (ToJSON, FromJSON, parseJSON, toJSON, withText)
+import Data.Aeson (ToJSON, FromJSON, parseJSON, toJSON, withScientific)
 import Data.Text       (Text)
 import GHC.Generics (Generic)
 import Servant.API
@@ -16,9 +16,9 @@ instance ToJSON IsSuccess where
   toJSON Fail = "0"
 
 instance FromJSON IsSuccess where
-  parseJSON = withText "string" $ \case
-    "1" -> return Success
-    "0" -> return Fail
+  parseJSON = withScientific "number" $ \case
+    1 -> return Success
+    0 -> return Fail
     y -> fail $ "IsSuccess can only be 1 or 0, not " <> show y
 
 instance ToHttpApiData IsSuccess where
