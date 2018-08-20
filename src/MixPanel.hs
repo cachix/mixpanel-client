@@ -9,20 +9,23 @@ module MixPanel
   , HTTP.newManager
   ) where
 
-import           Control.Monad.Trans.Reader     ( ReaderT(..), runReaderT )
-import Data.Aeson      (ToJSON)
+import           Control.Monad.Trans.Reader     ( ReaderT(..)
+                                                , runReaderT
+                                                )
+import           Data.Aeson                     ( ToJSON )
 import           Data.Text                      ( Text )
 import qualified Network.HTTP.Client           as HTTP
 import           Network.HTTP.Client.TLS        ( tlsManagerSettings )
 import           Servant.API             hiding ( URI )
 import           Servant.Client
 
-import           MixPanel.Api                   ( api
-                                                )
+import           MixPanel.Api                   ( api )
 import           MixPanel.Types.Core            ( IsSuccess
                                                 , AuthToken(..)
                                                 )
-import           MixPanel.Types.TrackData       ( TrackData(..), mkProperties )
+import           MixPanel.Types.TrackData       ( TrackData(..)
+                                                , mkProperties
+                                                )
 import           MixPanel.Types.EngageData      ( EngageData )
 
 

@@ -7,15 +7,13 @@ module MixPanel.Api
   , api
   ) where
 
+import           Data.Text                      ( Text )
+import           Data.Proxy                     ( Proxy(..) )
+import           Servant.API             hiding ( URI )
 
-import Data.Text (Text)
-
-import Data.Proxy (Proxy(..))
-import Servant.API hiding (URI)
-
-import MixPanel.Types.Core (IsSuccess)
-import MixPanel.Types.TrackData (TrackData)
-import MixPanel.Types.EngageData (EngageData)
+import           MixPanel.Types.Core            ( IsSuccess )
+import           MixPanel.Types.TrackData       ( TrackData )
+import           MixPanel.Types.EngageData      ( EngageData )
 
 
 type Track = "track"

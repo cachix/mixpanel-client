@@ -1,9 +1,17 @@
-module MixPanel.Types.Core (AuthToken(..), IsSuccess(..)) where
+module MixPanel.Types.Core
+  ( AuthToken(..)
+  , IsSuccess(..)
+  ) where
 
-import Data.Aeson (ToJSON, FromJSON, parseJSON, toJSON, withScientific)
-import Data.Text       (Text)
-import GHC.Generics (Generic)
-import Servant.API
+import           Data.Aeson                     ( ToJSON
+                                                , FromJSON
+                                                , parseJSON
+                                                , toJSON
+                                                , withScientific
+                                                )
+import           Data.Text                      ( Text )
+import           GHC.Generics                   ( Generic )
+import           Servant.API
 
 newtype AuthToken = AuthToken Text
   deriving (Generic, ToJSON)

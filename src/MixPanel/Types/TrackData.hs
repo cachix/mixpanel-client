@@ -5,15 +5,22 @@ module MixPanel.Types.TrackData
   , mkProperties
   ) where
 
-import Data.Aeson      (ToJSON, parseJSON, toJSON, withText, encode, object, (.=))
-import Data.Text       (Text)
-import qualified Data.ByteString.Base64.Lazy as B64
-import Data.Time.Clock.POSIX (POSIXTime)
-import GHC.Generics (Generic)
-import Servant.API
-import Data.String.Conv (toS)
+import           Data.Aeson                     ( ToJSON
+                                                , parseJSON
+                                                , toJSON
+                                                , withText
+                                                , encode
+                                                , object
+                                                , (.=)
+                                                )
+import           Data.Text                      ( Text )
+import qualified Data.ByteString.Base64.Lazy   as B64
+import           Data.Time.Clock.POSIX          ( POSIXTime )
+import           GHC.Generics                   ( Generic )
+import           Servant.API
+import           Data.String.Conv               ( toS )
 
-import MixPanel.Types.Core (AuthToken)
+import           MixPanel.Types.Core            ( AuthToken )
 
 
 data TrackData = TrackData
