@@ -1,15 +1,12 @@
-sudo: false
+language: nix
+sudo: required
+before_script:
+- sudo mount -o remount,exec,size=4G,mode=755 /run/user || true
 
 # Caching so the next build will be fast too.
 cache:
   directories:
   - $HOME/.stack
 
-before_install:
-# Download and unpack the stack executable
-- mkdir -p ~/.local/bin
-- export PATH=$HOME/.local/bin:$PATH
-- travis_retry curl -L https://get.haskellstack.org/stable/linux-x86_64.tar.gz | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
-
 script:
-  - stack --no-terminal --skip-ghc-check test
+  - nix-shell -p stack --run "stack --no-terminal --nix test"
