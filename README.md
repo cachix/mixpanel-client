@@ -16,9 +16,12 @@ Implements major features of [MixPanel HTTP API](https://mixpanel.com/help/refer
 ## Getting started
 
 ```haskell
-import Data.Aeson ((.=))
-import GHC.Exts (fromList)
-import MixPanel
+import Data.Aeson ( (.=) )
+import GHC.Exts   ( fromList)
+import MixPanel   ( Operation(Set), engage, track, alias, DidSucceed(..)
+                  , runMixPanel,  AuthToken(..), mkEnv
+                  -- reexports
+                  , newManager, tlsManagerSettings)
 
 
 main :: IO ()
