@@ -1,6 +1,11 @@
 # MixPanel client for Haskell
 
-Implements part of [MixPanel HTTP API](https://mixpanel.com/help/reference/http).
+
+[![Build Status](https://travis-ci.com/domenkozar/mixpanel-client.svg?branch=master)](https://travis-ci.com/domenkozar/mixpanel-client)
+[![Hackage](https://img.shields.io/hackage/v/mixpanel-client.svg)](https://hackage.haskell.org/package/mixpanel-client)
+
+
+Implements major features of [MixPanel HTTP API](https://mixpanel.com/help/reference/http).
 
 - [x] track
 - [x] alias
@@ -18,7 +23,7 @@ import MixPanel
 
 main :: IO ()
 main = do
-  -- Setup
+  -- setup
   manager <- newManager tlsManagerSettings
   let env = mkEnv (AuthToken "foobar") manager
 
