@@ -16,12 +16,13 @@ Implements major features of [MixPanel HTTP API](https://mixpanel.com/help/refer
 ## Getting started
 
 ```haskell
-import Data.Aeson ( (.=) )
-import GHC.Exts   ( fromList)
-import MixPanel   ( Operation(Set), engage, track, alias, DidSucceed(..)
-                  , runMixPanel,  AuthToken(..), mkEnv
-                  -- reexports
-                  , newManager, tlsManagerSettings)
+import Data.Aeson      ( (.=) )
+import Data.Time.Clock ( getCurrentTime )
+import GHC.Exts        ( fromList)
+import MixPanel        ( Operation(Set), engage, track, alias, DidSucceed(..)
+                       , runMixPanel,  AuthToken(..), mkEnv
+                       -- reexports
+                       , newManager, tlsManagerSettings)
 
 
 main :: IO ()
@@ -45,9 +46,10 @@ main = do
     $ alias "generated-id" "user@example.com"
 
   -- profile engagement
+  now <- getCurrentTime
   Right Success <- runMixPanel env
     $ engage "user@example.com"
-    $ Set (fromList [ "customProperty" .= ("foobar" :: String)])
+    $ Set (fromList [ "registeredOn" .= now])
 
   putStrLn "All good!"
 ```
@@ -59,7 +61,6 @@ a) Why does it use `Object/Array` intemediate values from `Data.Aeson`?
 
 ## TODO
 
-- date formatting
 - batch requests
 - expose extra url query paramerers
 - engage special properties more type safe?
