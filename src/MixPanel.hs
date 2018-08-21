@@ -6,6 +6,7 @@ module MixPanel
   , Operation(..)
   , DistinctId
   , mkEnv
+  , Env
   , track
   , alias
   , engage
