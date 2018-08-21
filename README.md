@@ -23,7 +23,7 @@ main = do
 
 ## Design questions
 
-a) Should properties be exposed as `Value` (from Data.Aeson) or as `ToJSON a =>`?
+a) Should properties be exposed as `Value` (from Data.Aeson) or `Object` or as `ToJSON a =>`?
 
 
 ## TODO
