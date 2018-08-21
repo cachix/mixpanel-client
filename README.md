@@ -33,7 +33,7 @@ main = do
 
   -- track an event with extra properties
   Right Success <- runMixPanel env
-    $ track "Played Video"
+    $ track "Played Video Unique per user"
     $ fromList [ "distinct_id" .= ("generated-id" :: String)
                , "customProperty" .= True ]
 
