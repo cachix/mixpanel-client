@@ -2,10 +2,13 @@ module MixPanel
   ( runMixPanel
   , MixPanel
   , AuthToken(..)
-  , IsSuccess(..)
+  , DidSucceed(..)
+  , Operation(..)
+  , DistinctId
   , mkEnv
   , track
   , alias
+  , engage
   -- manager reexports
   , tlsManagerSettings
   , HTTP.newManager
@@ -16,21 +19,23 @@ import           Control.Monad.Trans.Reader     ( ReaderT(..)
                                                 , ask
                                                 )
 import           Control.Monad.Trans.Class      ( lift )
-import           Data.Aeson                     ( ToJSON, object, Object, (.=) )
+import           Data.Aeson                     ( Object, (.=) )
 import           Data.Text                      ( Text )
+import           GHC.Exts                       ( fromList )
 import qualified Network.HTTP.Client           as HTTP
 import           Network.HTTP.Client.TLS        ( tlsManagerSettings )
 import           Servant.API             hiding ( URI )
 import           Servant.Client
 
 import           MixPanel.Api                   ( api )
-import           MixPanel.Types.Core            ( IsSuccess(..)
+import           MixPanel.Types.Core            ( DidSucceed(..)
+                                                , Toggle(..)
                                                 , AuthToken(..)
                                                 )
 import           MixPanel.Types.TrackData       ( TrackData(..)
                                                 , mkProperties
                                                 )
-import           MixPanel.Types.EngageData      ( EngageData )
+import           MixPanel.Types.EngageData      ( EngageData, DistinctId, Operation(..), mkEngageData )
 
 
 host :: BaseUrl
@@ -49,26 +54,35 @@ mkEnv authtoken httpManager = Env {..}
 
 type MixPanel = ReaderT Env ClientM
 
-trackC :: TrackData -> Maybe IsSuccess -> Maybe Text -> Maybe IsSuccess -> Maybe Text -> Maybe IsSuccess -> ClientM IsSuccess
-engageC ::  EngageData -> Maybe Text -> Maybe Text -> Maybe IsSuccess -> ClientM IsSuccess
+trackC :: TrackData -> Maybe Toggle -> Maybe Text -> Maybe Toggle -> Maybe Text -> Maybe Toggle -> ClientM DidSucceed
+engageC :: EngageData -> Maybe Text -> Maybe Text -> Maybe Toggle -> ClientM DidSucceed
 trackC :<|> engageC = client api
 
-trackC' :: TrackData -> ClientM IsSuccess
-trackC' trackdata = trackC trackdata Nothing Nothing Nothing Nothing Nothing
+trackC' :: TrackData -> ClientM DidSucceed
+trackC' trackdata = trackC trackdata Nothing Nothing Nothing Nothing (Just On)
+
+engageC' :: EngageData -> ClientM DidSucceed
+engageC' engagedata = engageC engagedata Nothing Nothing (Just On)
 
 runMixPanel :: Env -> MixPanel a -> IO (Either ServantError a)
 runMixPanel env comp = runClientM (runReaderT comp env) (clientEnv env)
 
-track :: Text -> Object -> MixPanel IsSuccess
+track :: Text -> Object -> MixPanel DidSucceed
 track event props = do
    Env{..} <- ask
    lift $ trackC' $ TrackData event $ mkProperties authtoken props
 
 -- | Merges distinct id into alias id
-alias :: Text -> Text -> MixPanel IsSuccess
+alias :: DistinctId -> Text -> MixPanel DidSucceed
 alias distinctId aliasId = do
   Env{..} <- ask
   lift $ trackC' $ TrackData "$create_alias" $ mkProperties authtoken props
     where
       props :: Object
-      props = mempty
+      props = fromList [ "alias" .= aliasId
+                       , "distinct_id" .= distinctId]
+
+engage :: DistinctId -> Operation -> MixPanel DidSucceed
+engage distinctid operation = do
+  Env{..} <- ask
+  lift $ engageC' $ mkEngageData authtoken distinctid operation

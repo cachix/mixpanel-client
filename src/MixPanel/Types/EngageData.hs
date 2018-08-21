@@ -2,49 +2,77 @@
 {-# LANGUAGE FlexibleContexts #-}
 module MixPanel.Types.EngageData
   ( EngageData
+  , DistinctId
   , mkEngageData
   , Operation(..)
   ) where
 
-import           Data.ByteString                ( ByteString )
+import           Data.Text                      ( Text )
 import           Data.Aeson                     ( ToJSON
                                                 , toJSON
-                                                , object
+                                                , Object
+                                                , Value(..)
+                                                , Array
                                                 , encode
+                                                , (.=)
                                                 )
 import qualified Data.ByteString.Base64.Lazy   as B64
 import           Data.String.Conv               ( toS )
+import           GHC.Exts                       ( fromList )
 import           Servant.API
 
 import           MixPanel.Types.Core            ( AuthToken )
 
 
 data Operation where
-    Set :: ToJSON a => a -> Operation
-    SetOnce :: ToJSON a => a -> Operation
-    Add :: ToJSON a => a -> Operation
-    Append :: ToJSON a => a -> Operation
-    Union :: ToJSON a => a -> Operation
-    Remove :: ToJSON a => a -> Operation
-    Unset :: ToJSON [a] => [a] -> Operation
-    Delete :: Operation
+  Set :: Object -> Operation
+  SetOnce :: Object -> Operation
+  Add :: Object -> Operation
+  Append :: Object -> Operation
+  Union :: Object -> Operation
+  Remove :: Object -> Operation
+  Unset :: Array -> Operation
+  Delete :: Operation
 
+instance ToJSON Operation where
+  toJSON (Set obj) = Object obj
+  toJSON (SetOnce obj) = Object obj
+  toJSON (Add obj) = Object obj
+  toJSON (Append obj) = Object obj
+  toJSON (Union obj) = Object obj
+  toJSON (Remove obj) = Object obj
+  toJSON (Unset obj) = Array obj
+  toJSON Delete = ""
 
-type DistinctId = ByteString
+operationIdentifier :: Operation -> Text
+operationIdentifier (Set _) = "$set"
+operationIdentifier (SetOnce _) = "$set_once"
+operationIdentifier (Add _) = "$add"
+operationIdentifier (Append _) = "$append"
+operationIdentifier (Union _) = "$union"
+operationIdentifier (Remove _) = "$remove"
+operationIdentifier (Unset _) = "$unset"
+operationIdentifier Delete = "$delete"
+
+type DistinctId = Text
 
 data EngageData = EngageData
   { token :: AuthToken
   , distinctId :: DistinctId
-  , ip :: Maybe ByteString
-  , time :: Maybe ByteString
-  , ignoreTime :: Maybe ByteString
+  , ip :: Maybe Text
+  , time :: Maybe Text
+  , ignoreTime :: Maybe Text
   , operation :: Operation
   }
 
--- TODO: properly set Operation
 instance ToJSON EngageData where
-  toJSON EngageData{..} = object
-    [
+  toJSON EngageData{..} = Object $ fromList -- TODO: filter out null values
+    [ "$token" .= token
+    , "$distinct_id" .= distinctId
+    , "$time" .= time
+    , "$ignoreTime" .= ignoreTime
+    , "$ip" .= ip
+    , operationIdentifier operation .= toJSON operation
     ]
 
 instance ToHttpApiData EngageData where

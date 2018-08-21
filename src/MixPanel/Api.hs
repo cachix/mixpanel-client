@@ -11,26 +11,26 @@ import           Data.Text                      ( Text )
 import           Data.Proxy                     ( Proxy(..) )
 import           Servant.API             hiding ( URI )
 
-import           MixPanel.Types.Core            ( IsSuccess )
+import           MixPanel.Types.Core            ( DidSucceed, Toggle )
 import           MixPanel.Types.TrackData       ( TrackData )
 import           MixPanel.Types.EngageData      ( EngageData )
 
 
 type Track = "track"
           :> QueryParam' '[Required] "data" TrackData
-          :> QueryParam "ip" IsSuccess
+          :> QueryParam "ip" Toggle
           :> QueryParam "redirect" Text -- URI
-          :> QueryParam "img" IsSuccess
+          :> QueryParam "img" Toggle
           :> QueryParam "callback" Text
-          :> QueryParam "verbose" IsSuccess
-          :> Get '[JSON] IsSuccess
+          :> QueryParam "verbose" Toggle
+          :> Get '[JSON] DidSucceed
 
 type Engage = "engage"
            :> QueryParam' '[Required] "data" EngageData
            :> QueryParam "redirect" Text -- URI
            :> QueryParam "callback" Text
-           :> QueryParam "verbose" IsSuccess
-           :> Get '[JSON] IsSuccess
+           :> QueryParam "verbose" Toggle
+           :> Get '[JSON] DidSucceed
 
 type API = Track :<|> Engage
 
