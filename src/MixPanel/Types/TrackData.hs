@@ -6,11 +6,11 @@ module MixPanel.Types.TrackData
   ) where
 
 import           Data.Aeson                     ( ToJSON
-                                                , parseJSON
                                                 , toJSON
-                                                , withText
                                                 , encode
+                                                , Value(..)
                                                 , object
+                                                , Object
                                                 , (.=)
                                                 )
 import           Data.Text                      ( Text )
@@ -19,7 +19,7 @@ import           Data.Time.Clock.POSIX          ( POSIXTime )
 import           GHC.Generics                   ( Generic )
 import           Servant.API
 import           Data.String.Conv               ( toS )
-
+import GHC.Exts (fromList)
 import           MixPanel.Types.Core            ( AuthToken )
 
 
@@ -32,25 +32,31 @@ data TrackData = TrackData
 instance ToHttpApiData TrackData where
   toUrlPiece = toS . B64.encode . encode
 
-data Properties = forall a. ToJSON a => Properties
+data Properties = Properties
   { token :: AuthToken
   , distinctId :: Maybe Text
   , time :: Maybe POSIXTime
   , ip :: Maybe Text
-  , extraProperties :: a
+  , extraProperties :: Object
   }
 
 instance ToJSON Properties where
-  toJSON Properties{..} = object
+  toJSON Properties{..} = Object $ fromList (
     [ "token" .= token
     , "distinct_id" .= distinctId
-    ] -- TODO: extraproperties
+    , "time" .= time
+    , "ip" .= ip
+    ]) <> extraProperties
 
-mkProperties :: ToJSON a => AuthToken -> a -> Properties
-mkProperties token extra = Properties
+maybeToValue Nothing             = mempty
+maybeToValue (Just (Object obj)) = obj
+maybeToValue _                   = error "toObject: value isn't an Object"
+
+mkProperties :: AuthToken -> Object -> Properties
+mkProperties token obj = Properties
   { token = token
   , distinctId = Nothing
   , time = Nothing
   , ip = Nothing
-  , extraProperties = extra
+  , extraProperties = obj
   }

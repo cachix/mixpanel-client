@@ -14,7 +14,6 @@ import           Data.Aeson                     ( ToJSON
                                                 )
 import qualified Data.ByteString.Base64.Lazy   as B64
 import           Data.String.Conv               ( toS )
-import           GHC.Generics                   ( Generic )
 import           Servant.API
 
 import           MixPanel.Types.Core            ( AuthToken )
