@@ -5,7 +5,7 @@
 [![Hackage](https://img.shields.io/hackage/v/mixpanel-client.svg)](https://hackage.haskell.org/package/mixpanel-client)
 
 
-Implements major features of [MixPanel HTTP API](https://mixpanel.com/help/reference/http).
+Implements major features of [MixPanel HTTP API](https://mixpanel.com/help/reference/http):
 
 - [x] track
 - [x] alias
