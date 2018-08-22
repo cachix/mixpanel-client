@@ -49,7 +49,7 @@ main = do
   now <- getCurrentTime
   Right Success <- runMixPanel env
     $ engage "user@example.com"
-    $ Set (fromList [ "registeredOn" .= now])
+    $ Set (fromList [ "$created" .= now])
 
   putStrLn "All good!"
 ```
