@@ -2,7 +2,7 @@
 {-# LANGUAGE TypeOperators #-}
 {- As per https://mixpanel.com/help/reference/http
 -}
-module MixPanel.Api
+module MixPanel.API
   ( API
   , api
   ) where

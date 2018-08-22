@@ -28,7 +28,7 @@ import           Network.HTTP.Client.TLS        ( tlsManagerSettings )
 import           Servant.API             hiding ( URI )
 import           Servant.Client
 
-import           MixPanel.Api                   ( api )
+import           MixPanel.API                   ( api )
 import           MixPanel.Types.Core            ( DidSucceed(..)
                                                 , Toggle(..)
                                                 , AuthToken(..)
