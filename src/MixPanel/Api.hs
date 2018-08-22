@@ -36,10 +36,3 @@ type API = Track :<|> Engage
 
 api :: Proxy API
 api = Proxy
-
-{- TODO:
-- engage special properties
-- batch requests
-- tracking revenue
-- import/export
--}

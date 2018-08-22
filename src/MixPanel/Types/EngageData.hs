@@ -66,7 +66,7 @@ data EngageData = EngageData
   }
 
 instance ToJSON EngageData where
-  toJSON EngageData{..} = Object $ fromList -- TODO: filter out null values
+  toJSON EngageData{..} = Object $ fromList
     [ "$token" .= token
     , "$distinct_id" .= distinctId
     , "$time" .= time

@@ -40,7 +40,7 @@ data Properties = Properties
   }
 
 instance ToJSON Properties where
-  toJSON Properties{..} = Object $ extraProperties <> fromList -- TODO: filter out null values
+  toJSON Properties{..} = Object $ extraProperties <> fromList
      [ "token" .= token
      , "distinct_id" .= distinctId
      , "time" .= time

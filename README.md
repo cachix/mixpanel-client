@@ -64,3 +64,5 @@ a) Why does it use `Object/Array` intemediate values from `Data.Aeson`?
 - batch requests
 - expose extra url query paramerers
 - engage special properties more type safe?
+- filter out null values in requests to mixpanel
+- api support for tracking revenue
