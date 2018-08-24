@@ -61,6 +61,7 @@ tests:
     dependencies:
     - base
     - mixpanel-client
-    - markdown-unlit
     ghc-options:
     - -pgmL markdown-unlit
+    verbatim:
+      build-tool-depends: markdown-unlit:markdown-unlit

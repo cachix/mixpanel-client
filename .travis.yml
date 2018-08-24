@@ -9,4 +9,5 @@ cache:
   - $HOME/.stack
 
 script:
+  - rm -rf $HOME/.stack/setup-exe-cache
   - nix-shell -p stack --run "stack --no-terminal --nix test"
