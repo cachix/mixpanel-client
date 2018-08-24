@@ -1,8 +1,6 @@
 module MixPanel
-  ( runMixPanel
-  , MixPanel
+  ( MixPanelError(..)
   , AuthToken(..)
-  , DidSucceed(..)
   , Operation(..)
   , DistinctId
   , mkEnv
@@ -15,11 +13,6 @@ module MixPanel
   , HTTP.newManager
   ) where
 
-import           Control.Monad.Trans.Reader     ( ReaderT(..)
-                                                , runReaderT
-                                                , ask
-                                                )
-import           Control.Monad.Trans.Class      ( lift )
 import           Data.Aeson                     ( Object, (.=) )
 import           Data.Text                      ( Text )
 import           GHC.Exts                       ( fromList )
@@ -42,6 +35,10 @@ import           MixPanel.Types.EngageData      ( EngageData, DistinctId, Operat
 host :: BaseUrl
 host = BaseUrl Https "api.mixpanel.com" 443 ""
 
+data MixPanelError
+  = ServantError ServantError
+  | Error Text
+
 data Env = Env
   { authtoken :: AuthToken
   , httpManager :: HTTP.Manager
@@ -53,7 +50,7 @@ mkEnv authtoken httpManager = Env {..}
   where
     clientEnv = mkClientEnv httpManager host
 
-type MixPanel = ReaderT Env ClientM
+
 
 trackC :: TrackData -> Maybe Toggle -> Maybe Text -> Maybe Toggle -> Maybe Text -> Maybe Toggle -> ClientM DidSucceed
 engageC :: EngageData -> Maybe Text -> Maybe Text -> Maybe Toggle -> ClientM DidSucceed
@@ -63,27 +60,30 @@ trackC' :: TrackData -> ClientM DidSucceed
 trackC' trackdata = trackC trackdata Nothing Nothing Nothing Nothing (Just On)
 
 engageC' :: EngageData -> ClientM DidSucceed
-engageC' engagedata = engageC engagedata Nothing Nothing (Just On)
+engageC' engagedata =
+  engageC engagedata Nothing Nothing (Just On)
 
-runMixPanel :: Env -> MixPanel a -> IO (Either ServantError a)
-runMixPanel env comp = runClientM (runReaderT comp env) (clientEnv env)
+runMixPanel :: ClientEnv -> ClientM DidSucceed -> IO (Either MixPanelError ())
+runMixPanel clientEnv comp = do
+  result <- runClientM comp clientEnv
+  return $ case result of
+    Left err -> Left $ ServantError err
+    Right (Fail err) -> Left $ Error err
+    Right Success -> Right ()
 
-track :: Text -> Object -> MixPanel DidSucceed
-track event props = do
-   Env{..} <- ask
-   lift $ trackC' $ TrackData event $ mkProperties authtoken props
+track :: Env -> Text -> Object -> IO (Either MixPanelError ())
+track Env{..} event props =
+  runMixPanel clientEnv $ trackC' $ TrackData event $ mkProperties authtoken props
 
 -- | Merges distinct id into alias id
-alias :: DistinctId -> Text -> MixPanel DidSucceed
-alias distinctId aliasId = do
-  Env{..} <- ask
-  lift $ trackC' $ TrackData "$create_alias" $ mkProperties authtoken props
+alias :: Env -> DistinctId -> Text -> IO (Either MixPanelError ())
+alias Env{..} distinctId aliasId =
+   runMixPanel clientEnv $ trackC' $ TrackData "$create_alias" $ mkProperties authtoken props
     where
       props :: Object
       props = fromList [ "alias" .= aliasId
                        , "distinct_id" .= distinctId]
 
-engage :: DistinctId -> Operation -> MixPanel DidSucceed
-engage distinctid operation = do
-  Env{..} <- ask
-  lift $ engageC' $ mkEngageData authtoken distinctid operation
+engage :: Env -> DistinctId -> Operation -> IO (Either MixPanelError ())
+engage Env{..} distinctid operation =
+  runMixPanel clientEnv $ engageC' $ mkEngageData authtoken distinctid operation
