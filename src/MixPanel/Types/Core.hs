@@ -40,7 +40,5 @@ instance FromJSON DidSucceed where
     status <- o .: "status"
     case (status :: Int) of
       1 -> return Success
-      0 -> do
-        err <- o .: "error"
-        return $ Fail err
+      0 -> Fail <$> o .: "error"
       _ -> fail ("unknown status: " ++ show status)

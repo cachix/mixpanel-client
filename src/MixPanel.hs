@@ -3,12 +3,14 @@ module MixPanel
   , AuthToken(..)
   , Operation(..)
   , DistinctId
+  -- Setup
   , mkEnv
   , Env
+  -- mixpanel api calls
   , track
   , alias
   , engage
-  -- manager reexports
+  -- HTTP manager reexports
   , tlsManagerSettings
   , HTTP.newManager
   ) where
@@ -75,7 +77,7 @@ track :: Env -> Text -> Object -> IO (Either MixPanelError ())
 track Env{..} event props =
   runMixPanel clientEnv $ trackC' $ TrackData event $ mkProperties authtoken props
 
--- | Merges distinct id into alias id
+-- | Renames distinct id into alias id
 alias :: Env -> DistinctId -> Text -> IO (Either MixPanelError ())
 alias Env{..} distinctId aliasId =
    runMixPanel clientEnv $ trackC' $ TrackData "$create_alias" $ mkProperties authtoken props
