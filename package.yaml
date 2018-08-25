@@ -18,7 +18,6 @@ dependencies:
 - aeson
 - bytestring
 - base64-bytestring
-- transformers
 - http-client
 - http-client-tls
 - servant >= 0.14.1
