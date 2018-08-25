@@ -18,7 +18,6 @@ dependencies:
 - aeson
 - bytestring
 - base64-bytestring
-- transformers
 - http-client
 - http-client-tls
 - servant >= 0.14.1
@@ -61,6 +60,7 @@ tests:
     dependencies:
     - base
     - mixpanel-client
-    - markdown-unlit
     ghc-options:
     - -pgmL markdown-unlit
+    verbatim:
+      build-tool-depends: markdown-unlit:markdown-unlit

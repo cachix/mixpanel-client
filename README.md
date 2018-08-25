@@ -18,9 +18,9 @@ Implements major features of [MixPanel HTTP API](https://mixpanel.com/help/refer
 ```haskell
 import Data.Aeson      ( (.=) )
 import Data.Time.Clock ( getCurrentTime )
-import GHC.Exts        ( fromList)
-import MixPanel        ( Operation(Set), engage, track, alias, DidSucceed(..)
-                       , runMixPanel,  AuthToken(..), mkEnv
+import GHC.Exts        ( fromList )
+import MixPanel        ( Operation(Set), engage, track, alias
+                       , AuthToken(..), mkEnv
                        -- reexports
                        , newManager, tlsManagerSettings)
 
@@ -32,23 +32,19 @@ main = do
   let env = mkEnv (AuthToken "foobar") manager
 
   -- track a simple event
-  Right Success <- runMixPanel env
-    $ track "Played Video" mempty
+  Right () <- track env "Played Video" mempty
 
   -- track an event with extra properties
-  Right Success <- runMixPanel env
-    $ track "Played Video Unique per user"
+  Right () <- track env "Played Video Unique per user"
     $ fromList [ "distinct_id" .= ("generated-id" :: String)
                , "customProperty" .= True ]
 
   -- alias the user
-  Right Success <- runMixPanel env
-    $ alias "generated-id" "user@example.com"
+  Right () <- alias env "generated-id" "user@example.com"
 
   -- profile engagement
   now <- getCurrentTime
-  Right Success <- runMixPanel env
-    $ engage "user@example.com"
+  Right () <- engage env "user@example.com"
     $ Set (fromList [ "$created" .= now])
 
   putStrLn "All good!"
