@@ -15,6 +15,7 @@ module MixPanel
   , HTTP.newManager
   ) where
 
+import           Control.Exception              ( Exception )
 import           Data.Aeson                     ( Object, (.=) )
 import           Data.Text                      ( Text )
 import           GHC.Exts                       ( fromList )
@@ -40,6 +41,7 @@ host = BaseUrl Https "api.mixpanel.com" 443 ""
 data MixPanelError
   = ServantError ServantError
   | Error Text
+  deriving (Show, Exception)
 
 data Env = Env
   { authtoken :: AuthToken
