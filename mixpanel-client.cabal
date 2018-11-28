@@ -1,5 +1,5 @@
 name:           mixpanel-client
-version:        0.1.0.0
+version:        0.1.1
 synopsis:       Mixpanel client
 homepage:       https://github.com/domenkozar/mixpanel-client#readme
 bug-reports:    https://github.com/domenkozar/mixpanel-client/issues
