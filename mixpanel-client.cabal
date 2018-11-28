@@ -84,6 +84,7 @@ test-suite readme
     , bytestring
     , http-client
     , http-client-tls
+    , markdown-unlit
     , mixpanel-client
     , servant >=0.14.1
     , servant-client
