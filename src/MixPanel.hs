@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 module MixPanel
   ( MixPanelError(..)
   , AuthToken(..)
@@ -34,12 +35,15 @@ import           MixPanel.Types.TrackData       ( TrackData(..)
                                                 )
 import           MixPanel.Types.EngageData      ( EngageData, DistinctId, Operation(..), mkEngageData )
 
+#if !MIN_VERSION_servant_client(0,16,0)
+#define ClientError ServantError
+#endif
 
 host :: BaseUrl
 host = BaseUrl Https "api.mixpanel.com" 443 ""
 
 data MixPanelError
-  = ServantError ServantError
+  = ClientError ClientError
   | Error Text
   deriving (Show, Exception)
 
@@ -71,7 +75,7 @@ runMixPanel :: ClientEnv -> ClientM DidSucceed -> IO (Either MixPanelError ())
 runMixPanel clientEnv comp = do
   result <- runClientM comp clientEnv
   return $ case result of
-    Left err -> Left $ ServantError err
+    Left err -> Left $ ClientError err
     Right (Fail err) -> Left $ Error err
     Right Success -> Right ()
 
