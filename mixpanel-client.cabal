@@ -1,22 +1,22 @@
 name:           mixpanel-client
-version:        0.1.1
+version:        0.2.0
 synopsis:       Mixpanel client
-homepage:       https://github.com/domenkozar/mixpanel-client#readme
-bug-reports:    https://github.com/domenkozar/mixpanel-client/issues
+homepage:       https://github.com/hercules-ci/mixpanel-client#readme
+bug-reports:    https://github.com/hercules-ci/mixpanel-client/issues
 author:         Domen Kožar
-maintainer:     domen@enlambda.com
+maintainer:     domen@hercules-ci.com
 copyright:      2018 Domen Kožar
 license:        Apache-2.0
 license-file:   LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10
 extra-source-files:
-    ChangeLog.md
+    CHANGELOG.md
     README.md
 
 source-repository head
   type: git
-  location: https://github.com/domenkozar/mixpanel-client
+  location: https://github.com/hercules-ci/mixpanel-client
 
 library
   exposed-modules:
