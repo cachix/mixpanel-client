@@ -1,5 +1,5 @@
 name:           mixpanel-client
-version:        0.2.0
+version:        0.2.1
 synopsis:       Mixpanel client
 homepage:       https://github.com/hercules-ci/mixpanel-client#readme
 bug-reports:    https://github.com/hercules-ci/mixpanel-client/issues
