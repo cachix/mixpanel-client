@@ -1,7 +1,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE FlexibleContexts #-}
 module MixPanel.Types.EngageData
-  ( EngageData
+  ( EngageData(..)
   , DistinctId
   , mkEngageData
   , Operation(..)

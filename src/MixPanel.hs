@@ -11,6 +11,7 @@ module MixPanel
   , track
   , alias
   , engage
+  , engage'
   -- HTTP manager reexports
   , tlsManagerSettings
   , HTTP.newManager
@@ -95,3 +96,7 @@ alias Env{..} distinctId aliasId =
 engage :: Env -> DistinctId -> Operation -> IO (Either MixPanelError ())
 engage Env{..} distinctid operation =
   runMixPanel clientEnv $ engageC' $ mkEngageData authtoken distinctid operation
+
+engage' :: Env -> DistinctId -> (EngageData -> EngageData) -> Operation -> IO (Either MixPanelError ())
+engage' Env{..} distinctid f operation =
+  runMixPanel clientEnv $ engageC' $ f $ mkEngageData authtoken distinctid operation
