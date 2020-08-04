@@ -70,7 +70,7 @@ instance ToJSON EngageData where
     [ "$token" .= token
     , "$distinct_id" .= distinctId
     , "$time" .= time
-    , "$ignoreTime" .= ignoreTime
+    , "$ignore_time" .= ignoreTime
     , "$ip" .= ip
     , operationIdentifier operation .= toJSON operation
     ]

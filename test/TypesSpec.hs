@@ -20,4 +20,4 @@ spec = describe "TrackData/EngageData" $ do
   it "EngageData merges properties" $
     let
       ed = mkEngageData (AuthToken "foobar") "123" $ Set (fromList [ "customProperty" .= ("foobar" :: String)])
-    in encode ed `shouldBe` "{\"$distinct_id\":\"123\",\"$set\":{\"customProperty\":\"foobar\"},\"$token\":\"foobar\",\"$ip\":null,\"$ignoreTime\":null,\"$time\":null}"
+    in encode ed `shouldBe` "{\"$distinct_id\":\"123\",\"$set\":{\"customProperty\":\"foobar\"},\"$token\":\"foobar\",\"$ip\":null,\"$ignore_time\":null,\"$time\":null}"
