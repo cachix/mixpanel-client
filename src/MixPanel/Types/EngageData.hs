@@ -61,7 +61,7 @@ data EngageData = EngageData
   , distinctId :: DistinctId
   , ip :: Maybe Text
   , time :: Maybe Text
-  , ignoreTime :: Maybe Text
+  , ignoreTime :: Maybe Bool
   , operation :: Operation
   }
 
