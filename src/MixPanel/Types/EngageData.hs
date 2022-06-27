@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE FlexibleContexts #-}
 module MixPanel.Types.EngageData
@@ -22,7 +23,11 @@ import           GHC.Exts                       ( fromList )
 import           Servant.API
 
 import           MixPanel.Types.Core            ( AuthToken )
-
+#if MIN_VERSION_aeson(2,0,0)
+import Data.Aeson.Key (Key)
+#else
+type Key = Text
+#endif
 
 data Operation where
   Set :: Object -> Operation
@@ -44,7 +49,7 @@ instance ToJSON Operation where
   toJSON (Unset obj) = Array obj
   toJSON Delete = ""
 
-operationIdentifier :: Operation -> Text
+operationIdentifier :: Operation -> Key
 operationIdentifier (Set _) = "$set"
 operationIdentifier (SetOnce _) = "$set_once"
 operationIdentifier (Add _) = "$add"
