@@ -1,4 +1,3 @@
-{-# LANGUAGE ExistentialQuantification #-}
 module MixPanel.Types.TrackData
   ( TrackData(..)
   , mkTrackData
