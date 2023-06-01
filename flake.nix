@@ -9,18 +9,20 @@
       systems = nixpkgs.lib.systems.flakeExposed;
       imports = [ inputs.haskell-flake.flakeModule ];
 
-      perSystem = { self', pkgs, ... }: {
+      perSystem = { self', pkgs, config, ... }: {
 
         haskellProjects.default = {
           devShell.enable = true;
-
-          settings = {
-            # Skip the tests when building because the README test requires network access.
-            mixpanel-client.check = false;
-          };
         };
 
-        packages.default = self'.packages.mixpanel-client;
+        # Skip the readme test by default since it requires network access.
+        packages.default = pkgs.haskell.lib.compose.overrideCabal (drv: {
+          testTarget = "mixpanel-test";
+        }) self'.packages.mixpanel-client;
+
+        # Build and run all tests. Requires network access. Use `--no-sandbox`.
+        packages.testAll =
+          config.haskellProjects.default.outputs.packages.mixpanel-client.package;
       };
     };
 }
