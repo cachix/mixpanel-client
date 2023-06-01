@@ -1,6 +1,7 @@
 {-# LANGUAGE ExistentialQuantification #-}
 module MixPanel.Types.TrackData
   ( TrackData(..)
+  , mkTrackData
   , Properties(..)
   , mkProperties
   ) where
@@ -12,6 +13,7 @@ import           Data.Aeson                     ( ToJSON
                                                 , Object
                                                 , (.=)
                                                 )
+import           Data.Aeson.Types               ( Pair )
 import           Data.Text                      ( Text )
 import qualified Data.ByteString.Base64.Lazy   as B64
 import           Data.Time.Clock.POSIX          ( POSIXTime )
@@ -27,9 +29,14 @@ data TrackData = TrackData
   , properties :: Properties
   } deriving (Generic, ToJSON)
 
-
 instance ToHttpApiData TrackData where
   toUrlPiece = toS . B64.encode . encode
+
+mkTrackData :: AuthToken -> Text -> [Pair] -> TrackData
+mkTrackData token event props =
+  TrackData { event = event, properties = properties }
+  where
+    properties = mkProperties token (fromList props)
 
 data Properties = Properties
   { token :: AuthToken
