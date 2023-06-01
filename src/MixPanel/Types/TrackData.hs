@@ -1,7 +1,7 @@
 {-# LANGUAGE ExistentialQuantification #-}
 module MixPanel.Types.TrackData
   ( TrackData(..)
-  , Properties
+  , Properties(..)
   , mkProperties
   ) where
 
