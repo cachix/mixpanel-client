@@ -1,7 +1,7 @@
 # MixPanel client for Haskell
 
 
-[![Build Status](https://travis-ci.com/hercules-ci/mixpanel-client.svg?branch=master)](https://travis-ci.com/domenkozar/mixpanel-client)
+[![Build Status](https://github.com/domenkozar/mixpanel-client/actions/workflows/build.yml/badge.svg)](https://github.com/domenkozar/mixpanel-client/actions/workflows/build.yml)
 [![Hackage](https://img.shields.io/hackage/v/mixpanel-client.svg)](https://hackage.haskell.org/package/mixpanel-client)
 
 

@@ -16,8 +16,8 @@ spec = describe "TrackData/EngageData" $ do
      td = TrackData "foobar" $ mkProperties (AuthToken "token123") props
      props :: Object
      props = fromList [ "distinct_id" .= ("bar" :: String) ]
-    in encode td `shouldBe` "{\"event\":\"foobar\",\"properties\":{\"time\":null,\"token\":\"token123\",\"ip\":null,\"distinct_id\":\"bar\"}}"
+    in encode td `shouldBe` "{\"event\":\"foobar\",\"properties\":{\"distinct_id\":\"bar\",\"ip\":null,\"time\":null,\"token\":\"token123\"}}"
   it "EngageData merges properties" $
     let
       ed = mkEngageData (AuthToken "foobar") "123" $ Set (fromList [ "customProperty" .= ("foobar" :: String)])
-    in encode ed `shouldBe` "{\"$distinct_id\":\"123\",\"$set\":{\"customProperty\":\"foobar\"},\"$token\":\"foobar\",\"$ip\":null,\"$ignore_time\":null,\"$time\":null}"
+    in encode ed `shouldBe` "{\"$distinct_id\":\"123\",\"$ignore_time\":null,\"$ip\":null,\"$set\":{\"customProperty\":\"foobar\"},\"$time\":null,\"$token\":\"foobar\"}"
