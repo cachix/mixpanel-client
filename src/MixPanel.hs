@@ -1,102 +1,27 @@
-{-# LANGUAGE CPP #-}
 module MixPanel
-  ( MixPanelError(..)
-  , AuthToken(..)
-  , Operation(..)
-  , DistinctId
-  -- Setup
-  , mkEnv
-  , Env
-  -- mixpanel api calls
-  , track
-  , alias
-  , engage
-  , engage'
-  -- HTTP manager reexports
-  , tlsManagerSettings
+  ( -- * MixPanel API
+    module MixPanel.API
+
+  -- * Env setup
+  , MixPanel.Env.Env
+  , MixPanel.Env.mkEnv
+
+  -- * Types
+  , MixPanel.Types.AuthToken(..)
+  , MixPanel.Types.DidSucceed(..)
+  , MixPanel.Types.DistinctId
+  , MixPanel.Types.Operation(..)
+  , MixPanel.Types.Toggle(..)
+
+  -- * HTTP manager reexports
   , HTTP.newManager
+  , HTTP.tlsManagerSettings
   ) where
 
-import           Control.Exception              ( Exception )
-import           Data.Aeson                     ( Object, (.=) )
-import           Data.Text                      ( Text )
-import           GHC.Exts                       ( fromList )
 import qualified Network.HTTP.Client           as HTTP
-import           Network.HTTP.Client.TLS        ( tlsManagerSettings )
-import           Servant.API             hiding ( URI )
-import           Servant.Client
+import           Network.HTTP.Client.TLS       as HTTP
 
-import           MixPanel.API                   ( api )
-import           MixPanel.Types.Core            ( DidSucceed(..)
-                                                , Toggle(..)
-                                                , AuthToken(..)
-                                                )
-import           MixPanel.Types.TrackData       ( TrackData(..)
-                                                , mkProperties
-                                                )
-import           MixPanel.Types.EngageData      ( EngageData, DistinctId, Operation(..), mkEngageData )
-
-#if !MIN_VERSION_servant_client(0,16,0)
-#define ClientError ServantError
-#endif
-
-host :: BaseUrl
-host = BaseUrl Https "api.mixpanel.com" 443 ""
-
-data MixPanelError
-  = ClientError ClientError
-  | Error Text
-  deriving (Show, Exception)
-
-data Env = Env
-  { authtoken :: AuthToken
-  , httpManager :: HTTP.Manager
-  , clientEnv :: ClientEnv
-  }
-
-mkEnv :: AuthToken -> HTTP.Manager -> Env
-mkEnv authtoken httpManager = Env {..}
-  where
-    clientEnv = mkClientEnv httpManager host
-
-
-
-trackC :: TrackData -> Maybe Toggle -> Maybe Text -> Maybe Toggle -> Maybe Text -> Maybe Toggle -> ClientM DidSucceed
-engageC :: EngageData -> Maybe Text -> Maybe Text -> Maybe Toggle -> ClientM DidSucceed
-trackC :<|> engageC = client api
-
-trackC' :: TrackData -> ClientM DidSucceed
-trackC' trackdata = trackC trackdata Nothing Nothing Nothing Nothing (Just On)
-
-engageC' :: EngageData -> ClientM DidSucceed
-engageC' engagedata =
-  engageC engagedata Nothing Nothing (Just On)
-
-runMixPanel :: ClientEnv -> ClientM DidSucceed -> IO (Either MixPanelError ())
-runMixPanel clientEnv comp = do
-  result <- runClientM comp clientEnv
-  return $ case result of
-    Left err -> Left $ ClientError err
-    Right (Fail err) -> Left $ Error err
-    Right Success -> Right ()
-
-track :: Env -> Text -> Object -> IO (Either MixPanelError ())
-track Env{..} event props =
-  runMixPanel clientEnv $ trackC' $ TrackData event $ mkProperties authtoken props
-
--- | Renames distinct id into alias id
-alias :: Env -> DistinctId -> Text -> IO (Either MixPanelError ())
-alias Env{..} distinctId aliasId =
-   runMixPanel clientEnv $ trackC' $ TrackData "$create_alias" $ mkProperties authtoken props
-    where
-      props :: Object
-      props = fromList [ "alias" .= aliasId
-                       , "distinct_id" .= distinctId]
-
-engage :: Env -> DistinctId -> Operation -> IO (Either MixPanelError ())
-engage Env{..} distinctid operation =
-  runMixPanel clientEnv $ engageC' $ mkEngageData authtoken distinctid operation
-
-engage' :: Env -> DistinctId -> (EngageData -> EngageData) -> Operation -> IO (Either MixPanelError ())
-engage' Env{..} distinctid f operation =
-  runMixPanel clientEnv $ engageC' $ f $ mkEngageData authtoken distinctid operation
+import           MixPanel.API
+import           MixPanel.Env
+import           MixPanel.Types.Core           as MixPanel.Types
+import           MixPanel.Types.EngageData     as MixPanel.Types

@@ -22,6 +22,7 @@ library
   exposed-modules:
       MixPanel
       MixPanel.API
+      MixPanel.Env
       MixPanel.Types.Core
       MixPanel.Types.EngageData
       MixPanel.Types.TrackData
