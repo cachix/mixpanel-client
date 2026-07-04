@@ -22,9 +22,11 @@ library
   exposed-modules:
       MixPanel
       MixPanel.API
+      MixPanel.Auth
       MixPanel.Env
       MixPanel.Types.Core
       MixPanel.Types.EngageData
+      MixPanel.Types.ImportData
       MixPanel.Types.TrackData
   hs-source-dirs:
       src
@@ -37,6 +39,7 @@ library
     , bytestring
     , http-client
     , http-client-tls
+    , http-types
     , servant >=0.14.1
     , servant-client
     , string-conv
@@ -48,6 +51,7 @@ test-suite mixpanel-test
   type: exitcode-stdio-1.0
   main-is: Main.hs
   other-modules:
+      ApiSpec
       Spec
       TypesSpec
   hs-source-dirs:
@@ -62,6 +66,7 @@ test-suite mixpanel-test
     , hspec
     , http-client
     , http-client-tls
+    , http-types
     , mixpanel-client
     , servant >=0.14.1
     , servant-client

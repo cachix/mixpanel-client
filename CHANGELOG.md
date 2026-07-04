@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Support for the Mixpanel `/import` ingestion endpoint via `importEvents` (up to 2000 records per request).
+- An `ImportPayload` sum type modelling what `/import` accepts: ordinary events (`mkImportEvent`) and `$merge` identity records (`mkMergeEvent`, original ID merge projects only).
+- `mkIdentifiedEvent` for linking a device id to a user id on simplified ID merge projects.
+- `ImportResponse` and `FailedRecord` types for inspecting per-record results of strict-mode imports.
+- `ProjectToken` and `ServiceAccount` credential types with an `Auth` class that turns them into wire-level `Credentials`.
+- `ImportAuth` and `ServiceAuth` capability classes that make passing an unsupported credential type to an endpoint a compile error.
+
 ## [0.3.0] - 2020-12-14
 
 ### Fixed
