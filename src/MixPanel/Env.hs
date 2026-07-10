@@ -1,4 +1,4 @@
-module MixPanel.Env 
+module MixPanel.Env
   ( Env(..)
   , mkEnv
   ) where
@@ -20,4 +20,3 @@ mkEnv :: AuthToken -> HTTP.Manager -> Env
 mkEnv authtoken httpManager = Env {..}
   where
     clientEnv = mkClientEnv httpManager host
-
